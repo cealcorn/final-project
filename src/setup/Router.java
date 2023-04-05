@@ -67,9 +67,9 @@ public class Router {
     /* Private methods */
 
     private Table splitHorizon(int destinationRouterId) {
-	//TODO: implement the split horizaon rule technique, as follows:
+	//TODO: implement the split horizon rule technique, as follows:
 	//      before sending the distance vector to a neighbor,
-	//      remove all the entries for which the neighor is used as the next hop
+	//      remove all the entries for which the neighbor is used as the next hop
 	//      (Note that you should first replicate the distance vector, then perform
 	//       the removals on the copy, and then return the pruned copy.)
 	

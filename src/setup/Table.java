@@ -1,6 +1,8 @@
 package setup;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -8,11 +10,55 @@ import java.util.Map;
 public class Table implements Serializable {
  //TODO: add any member variables and member methods.
     //Represents <Starting point router, Map<Destination router, cost to travel>
-    private Map<Integer, Map<Integer, Integer>> distanceVector;
+    private Map<Integer, RouteRecord> distanceVector = new HashMap<>();
+
+    public void addEntry(int destination, RouteRecord routeRecord) {
+        // add both parameters to HashMap
+        distanceVector.put(destination, routeRecord);
+    }
+
 
     @Override
     public String toString() {
         //TODO: you must complete the toString() method to print out the content of the distance vector
+//        +-----------------------------------+
+//        | Dest      | Cost      | Next Hop  |
+//        +-----------+-----------+-----------+
+//        |     x     |     x     |     x     |
+//        |     x     |     x     |     x     |
+//        |     x     |     x     |     x     |
+//        |     x     |     x     |     x     |
+//        +-----------------------------------+
+
+        // set variables
+        StringBuilder builder = new StringBuilder();
+        String top_bot = "+-----------------------------------+";
+        String labels  = "| Dest      | Cost      | Next Hop  |";
+        String divider = "+-----------+-----------+-----------+";
+//        String row     = "|     %d     |     %d     |     %d     |";
+        RouteRecord temp;
+        String temp2;
+        String[] tempArray;
+        int key, value1, value2;
+
+        // build table
+        builder.append(top_bot).append(labels).append(divider);
+
+        for (int i : distanceVector.keySet()) {
+            // per row
+            key = i;
+            temp = distanceVector.get(i);
+            temp2 = temp.toString();
+            tempArray = temp2.split(",");
+            value1 = Integer.parseInt(tempArray[0]);
+            value2 = Integer.parseInt(tempArray[1]);
+
+            builder.append(String.format("|     %d     |     %d     |     %d     |" , i, value1, value2));
+        }
+
+        builder.append(top_bot);
+
+        return builder.toString();
     }
 
 }
