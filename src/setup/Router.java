@@ -94,6 +94,13 @@ public class Router {
 
     private void initializeNeighbors(List<Link> links) {
 	//TODO: complete this method by populating the neighbor list: _neighborIds
+        for (Link l : links) {
+            if (l.connectingRouterId().get(0) == _Id) {
+                _neighborIds.add(l.connectingRouterId().get(1));
+            } else {
+                _neighborIds.add(l.connectingRouterId().get(0));
+            }
+        }
 
     }
 
