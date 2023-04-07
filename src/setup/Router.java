@@ -89,7 +89,13 @@ public class Router {
 
     private void initializeTable(List<Link> links) {
 	//TODO: complete this method to initialize the distance vector: _table
-
+        for (Link l : links) {
+            if (l.connectingRouterId().get(0) == _Id) {
+                _table.addEntry(l.connectingRouterId().get(1), new RouteRecord(l.weight(), l.connectingRouterId().get(1)));
+            } else {
+                _table.addEntry(l.connectingRouterId().get(0), new RouteRecord(l.weight(), l.connectingRouterId().get(0)));
+            }
+        }
     }
 
     private void initializeNeighbors(List<Link> links) {
