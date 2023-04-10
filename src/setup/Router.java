@@ -61,13 +61,29 @@ public class Router {
         while (true) {
 	    //TODO: implement the distance vector routing protocol
             //Wait to receive a datagram packet from a neighbor. Use datagram socket
+            //Create empty datagram packet
+            byte[] buffer = new byte[0];
+            DatagramPacket request = new DatagramPacket(
+                    buffer, // raw data to be encapsulated
+                    buffer.length, // size of raw data
+                    InetAddress.getLocalHost(), // destination IP address
+                    _port // destination port #
+            );
+
+            //Send empty packet
+            _datagramSocket.send(request);
+
+            //Receive packet
+            DatagramPacket response = new DatagramPacket(new byte[COMM_BYTE_SIZE], 4);
+            _datagramSocket.receive(response);
 
             //Extract the distance vector table from the received datagram packet
-            Table incomingTable = receiveTable();
+            Table incomingTable = receiveTable(response);
 
             //Use the received DV to optimize our own table. Call optimizeTable
             if(optimizeTable(incomingTable)){
                 //Prune table through splitHorizon before sending to neighbors
+                //Iterate over neighbor ID's and call splitHorizon
                 splitHorizon();
                 //Send the updated table (our own table) to all neighbors
                 sendTable();
