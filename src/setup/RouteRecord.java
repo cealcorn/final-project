@@ -20,4 +20,12 @@ public class RouteRecord implements Serializable {
         string = routeDistance + "," + nextHop;
         return string;
     }
+
+    public int getRouteDistance() {
+        return routeDistance;
+    }
+
+    public int getNextHop() {
+        return nextHop;
+    }
 }

@@ -83,7 +83,20 @@ public class Router {
 	//      remove all the entries for which the neighbor is used as the next hop
 	//      (Note that you should first replicate the distance vector, then perform
 	//       the removals on the copy, and then return the pruned copy.)
+
+        Table dvCopy = new Table(_table);
+        for (Map.Entry<Integer, RouteRecord> entry : dvCopy.getDistanceVector().entrySet()) {
+            int dest = entry.getKey();
+            int nextHop = entry.getValue().getNextHop();
+
+            if (nextHop == destinationRouterId) {
+                dvCopy.getDistanceVector().remove(dest);
+            }
+        }
+
+        return dvCopy;
     }
+
 
     // This method is called whenever a distance vector is received from a neighbor.
     private boolean optimizeTable(Table incomingTable){

@@ -10,13 +10,24 @@ import java.util.Map;
 public class Table implements Serializable {
  //TODO: add any member variables and member methods.
     //Represents <Starting point router, Map<Destination router, cost to travel>
-    private Map<Integer, RouteRecord> distanceVector = new HashMap<>();
+    private Map<Integer, RouteRecord> distanceVector;
 
     public void addEntry(int destination, RouteRecord routeRecord) {
         // add both parameters to HashMap
         distanceVector.put(destination, routeRecord);
     }
 
+    public Table() {
+        distanceVector = new HashMap<>();
+    }
+
+    public Table(Table table) {
+        this.distanceVector = new HashMap<>(table.getDistanceVector());
+    }
+
+    public Map<Integer, RouteRecord> getDistanceVector() {
+        return distanceVector;
+    }
 
     @Override
     public String toString() {
