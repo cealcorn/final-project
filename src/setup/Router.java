@@ -74,7 +74,7 @@ public class Router {
             _datagramSocket.send(request);
 
             //Receive packet
-            DatagramPacket response = new DatagramPacket(new byte[COMM_BYTE_SIZE], 4);
+            DatagramPacket response = new DatagramPacket(new byte[COMM_BYTE_SIZE], COMM_BYTE_SIZE);
             _datagramSocket.receive(response);
 
             //Extract the distance vector table from the received datagram packet
