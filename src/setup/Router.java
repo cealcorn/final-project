@@ -60,7 +60,18 @@ public class Router {
     public void runRouter() throws Exception{
         while (true) {
 	    //TODO: implement the distance vector routing protocol
+            //Wait to receive a datagram packet from a neighbor. Use datagram socket
 
+            //Extract the distance vector table from the received datagram packet
+            Table incomingTable = receiveTable();
+
+            //Use the received DV to optimize our own table. Call optimizeTable
+            if(optimizeTable(incomingTable)){
+                //Prune table through splitHorizon before sending to neighbors
+                splitHorizon();
+                //Send the updated table (our own table) to all neighbors
+                sendTable();
+            }
         }
     }
 
@@ -72,8 +83,6 @@ public class Router {
 	//      remove all the entries for which the neighbor is used as the next hop
 	//      (Note that you should first replicate the distance vector, then perform
 	//       the removals on the copy, and then return the pruned copy.)
-	
-
     }
 
     // This method is called whenever a distance vector is received from a neighbor.
@@ -88,7 +97,6 @@ public class Router {
     }
 
     private void initializeTable(List<Link> links) {
-	//TODO: complete this method to initialize the distance vector: _table
         for (Link l : links) {
             if (l.connectingRouterId().get(0) == _Id) {
                 _table.addEntry(l.connectingRouterId().get(1), new RouteRecord(l.weight(), l.connectingRouterId().get(1)));
@@ -99,7 +107,6 @@ public class Router {
     }
 
     private void initializeNeighbors(List<Link> links) {
-	//TODO: complete this method by populating the neighbor list: _neighborIds
         for (Link l : links) {
             if (l.connectingRouterId().get(0) == _Id) {
                 _neighborIds.add(l.connectingRouterId().get(1));
