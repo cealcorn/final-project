@@ -84,13 +84,15 @@ public class Router {
             if(optimizeTable(incomingTable)){
                 //Prune table through splitHorizon before sending to neighbors
                 //Iterate over neighbor ID's and call splitHorizon
-                splitHorizon();
+                for(int neighbors: _neighborIds){
+                    splitHorizon(neighbors);
+                }
                 //Send the updated table (our own table) to all neighbors
-                sendTable();
+                Table updatedTable = new Table(_table);
+                sendTable(InetAddress.getLocalHost(), _port, updatedTable);
             }
         }
     }
-
     /* Private methods */
 
     private Table splitHorizon(int destinationRouterId) {
