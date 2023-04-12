@@ -25,7 +25,15 @@ public class RouteRecord implements Serializable {
         return routeDistance;
     }
 
+    public void setRouteDistance(int routeDistance) {
+        this.routeDistance = routeDistance;
+    }
+
     public int getNextHop() {
         return nextHop;
+    }
+
+    public void setNextHop(int nextHop){
+        this.nextHop = nextHop;
     }
 }

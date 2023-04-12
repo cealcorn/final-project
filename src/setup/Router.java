@@ -59,7 +59,7 @@ public class Router {
     @SuppressWarnings("InfiniteLoopStatement")
     public void runRouter() throws Exception{
         while (true) {
-	    //TODO: implement the distance vector routing protocol
+            //TODO: implement the distance vector routing protocol
             //Wait to receive a datagram packet from a neighbor. Use datagram socket
             //Create empty datagram packet
             byte[] buffer = new byte[0];
@@ -79,16 +79,16 @@ public class Router {
 
             //Extract the distance vector table from the received datagram packet
             Table incomingTable = receiveTable(response);
+            Table updatedTable = new Table();
 
             //Use the received DV to optimize our own table. Call optimizeTable
             if(optimizeTable(incomingTable)){
                 //Prune table through splitHorizon before sending to neighbors
                 //Iterate over neighbor ID's and call splitHorizon
                 for(int neighbors: _neighborIds){
-                    splitHorizon(neighbors);
+                    updatedTable = splitHorizon(neighbors);
                 }
                 //Send the updated table (our own table) to all neighbors
-                Table updatedTable = new Table(_table);
                 sendTable(InetAddress.getLocalHost(), _port, updatedTable);
             }
         }
@@ -96,11 +96,11 @@ public class Router {
     /* Private methods */
 
     private Table splitHorizon(int destinationRouterId) {
-	//TODO: implement the split horizon rule technique, as follows:
-	//      before sending the distance vector to a neighbor,
-	//      remove all the entries for which the neighbor is used as the next hop
-	//      (Note that you should first replicate the distance vector, then perform
-	//       the removals on the copy, and then return the pruned copy.)
+        //TODO: implement the split horizon rule technique, as follows:
+        //      before sending the distance vector to a neighbor,
+        //      remove all the entries for which the neighbor is used as the next hop
+        //      (Note that you should first replicate the distance vector, then perform
+        //       the removals on the copy, and then return the pruned copy.)
 
         Table dvCopy = new Table(_table);
         for (Map.Entry<Integer, RouteRecord> entry : dvCopy.getDistanceVector().entrySet()) {
@@ -118,13 +118,28 @@ public class Router {
 
     // This method is called whenever a distance vector is received from a neighbor.
     private boolean optimizeTable(Table incomingTable){
-	//TODO: complete this method by implementing the Bellman-Ford algorithm
-	// Note that this method should return true if the optimization is successful ( i.e.,
-	// at least one entry of the router's own distance vector has been optimized.)
-	// Otherwise, if the router's own distance vector remains unchanged after the optimization attempt,
-	// this method should return false.
-	
+        //TODO: complete this method by implementing the Bellman-Ford algorithm
+        // Note that this method should return true if the optimization is successful ( i.e.,
+        // at least one entry of the router's own distance vector has been optimized.)
+        // Otherwise, if the router's own distance vector remains unchanged after the optimization attempt,
+        // this method should return false.
+        boolean optimized = false;
+        Map<Integer, RouteRecord> distanceVector = _table.getDistanceVector();
+        for(Map.Entry<Integer, RouteRecord> entry: distanceVector.entrySet()){
+            int destination = entry.getKey();
+            RouteRecord record = entry.getValue();
+            int oldCost = record.getRouteDistance();
 
+            for(int neighbors: _neighborIds){
+                int newCost = incomingTable.getDistanceVector().get(neighbors).getRouteDistance();
+                if(newCost < oldCost){
+                    record.setRouteDistance(newCost);
+                    record.setNextHop(neighbors);
+                    optimized = true;
+                }
+            }
+        }
+        return optimized;
     }
 
     private void initializeTable(List<Link> links) {
