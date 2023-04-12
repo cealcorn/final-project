@@ -121,15 +121,9 @@ public class Router {
             int destination = entry.getKey();
             RouteRecord record = entry.getValue();
             int oldCost = record.getRouteDistance();
-
-            //interate over table entries
-            for(int neighbors: _neighborIds){
-                int newCost = incomingTable.getDistanceVector().get(neighbors).getRouteDistance();
-                if(newCost < oldCost){
-                    record.setRouteDistance(newCost);
-                    record.setNextHop(neighbors);
-                    optimized = true;
-                }
+            int newCost = entry.getKey();
+            if(newCost<oldCost){
+                optimized = true;
             }
         }
         return optimized;

@@ -43,9 +43,9 @@ public class Table implements Serializable {
 
         // set variables
         StringBuilder builder = new StringBuilder();
-        String top_bot = "+-----------------------------------+";
-        String labels  = "| Dest      | Cost      | Next Hop  |";
-        String divider = "+-----------+-----------+-----------+";
+        String top_bot = "+-----------------------------------+\n";
+        String labels  = "| Dest      | Cost      | Next Hop  |\n";
+        String divider = "+-----------+-----------+-----------+\n";
 //        String row     = "|     %d     |     %d     |     %d     |";
         RouteRecord temp;
         String temp2;
@@ -64,7 +64,7 @@ public class Table implements Serializable {
             value1 = Integer.parseInt(tempArray[0]);
             value2 = Integer.parseInt(tempArray[1]);
 
-            builder.append(String.format("|     %d     |     %d     |     %d     |" , i, value1, value2));
+            builder.append(String.format("|     %d     |     %d     |     %d     |\n" , i, value1, value2));
         }
 
         builder.append(top_bot);
