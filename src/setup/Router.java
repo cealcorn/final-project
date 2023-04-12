@@ -62,16 +62,6 @@ public class Router {
             //TODO: implement the distance vector routing protocol
             //Wait to receive a datagram packet from a neighbor. Use datagram socket
             //Create empty datagram packet
-            byte[] buffer = new byte[0];
-            DatagramPacket request = new DatagramPacket(
-                    buffer, // raw data to be encapsulated
-                    buffer.length, // size of raw data
-                    InetAddress.getLocalHost(), // destination IP address
-                    _port // destination port #
-            );
-
-            //Send empty packet
-            _datagramSocket.send(request);
 
             //Receive packet
             DatagramPacket response = new DatagramPacket(new byte[COMM_BYTE_SIZE], COMM_BYTE_SIZE);
@@ -83,6 +73,7 @@ public class Router {
 
             //Use the received DV to optimize our own table. Call optimizeTable
             if(optimizeTable(incomingTable)){
+                System.out.println(_table);
                 //Prune table through splitHorizon before sending to neighbors
                 //Iterate over neighbor ID's and call splitHorizon
                 for(int neighbors: _neighborIds){
@@ -90,6 +81,7 @@ public class Router {
                 }
                 //Send the updated table (our own table) to all neighbors
                 sendTable(InetAddress.getLocalHost(), _port, updatedTable);
+
             }
         }
     }
@@ -130,6 +122,7 @@ public class Router {
             RouteRecord record = entry.getValue();
             int oldCost = record.getRouteDistance();
 
+            //interate over table entries
             for(int neighbors: _neighborIds){
                 int newCost = incomingTable.getDistanceVector().get(neighbors).getRouteDistance();
                 if(newCost < oldCost){
