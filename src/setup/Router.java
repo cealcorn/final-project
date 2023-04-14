@@ -73,7 +73,6 @@ public class Router {
 
             //Use the received DV to optimize our own table. Call optimizeTable
             if(optimizeTable(incomingTable)){
-                System.out.println(_table);
                 //Prune table through splitHorizon before sending to neighbors
                 //Iterate over neighbor ID's and call splitHorizon
                 for(int neighbors: _neighborIds){
@@ -81,7 +80,7 @@ public class Router {
                 }
                 //Send the updated table (our own table) to all neighbors
                 sendTable(InetAddress.getLocalHost(), _port, updatedTable);
-
+                System.out.println(_table);
             }
         }
     }
@@ -125,6 +124,7 @@ public class Router {
             int newCost = entry.getKey();
             if(newCost<oldCost){
                 optimized = true;
+                record.setRouteDistance(newCost);
             }
         }
         return optimized;
