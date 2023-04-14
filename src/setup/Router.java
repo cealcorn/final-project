@@ -59,10 +59,7 @@ public class Router {
     @SuppressWarnings("InfiniteLoopStatement")
     public void runRouter() throws Exception{
         while (true) {
-            //TODO: implement the distance vector routing protocol
             //Wait to receive a datagram packet from a neighbor. Use datagram socket
-            //Create empty datagram packet
-
             //Receive packet
             DatagramPacket response = new DatagramPacket(new byte[COMM_BYTE_SIZE], COMM_BYTE_SIZE);
             _datagramSocket.receive(response);
@@ -87,11 +84,6 @@ public class Router {
     /* Private methods */
 
     private Table splitHorizon(int destinationRouterId) {
-        //TODO: implement the split horizon rule technique, as follows:
-        //      before sending the distance vector to a neighbor,
-        //      remove all the entries for which the neighbor is used as the next hop
-        //      (Note that you should first replicate the distance vector, then perform
-        //       the removals on the copy, and then return the pruned copy.)
         Table dvCopy = new Table(_table);
         Map<Integer, RouteRecord> prunedDV = new HashMap<>();
 
@@ -110,15 +102,9 @@ public class Router {
 
     // This method is called whenever a distance vector is received from a neighbor.
     private boolean optimizeTable(Table incomingTable){
-        //TODO: complete this method by implementing the Bellman-Ford algorithm
-        // Note that this method should return true if the optimization is successful ( i.e.,
-        // at least one entry of the router's own distance vector has been optimized.)
-        // Otherwise, if the router's own distance vector remains unchanged after the optimization attempt,
-        // this method should return false.
         boolean optimized = false;
         Map<Integer, RouteRecord> distanceVector = _table.getDistanceVector();
         for(Map.Entry<Integer, RouteRecord> entry: distanceVector.entrySet()){
-            int destination = entry.getKey();
             RouteRecord record = entry.getValue();
             int oldCost = record.getRouteDistance();
             int newCost = entry.getKey();
